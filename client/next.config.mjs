@@ -9,4 +9,10 @@ export default {
     };
   },
   allowedDevOrigins: ["ticketing.dev"],
+  //   images: {
+  //   domains: ["https://unsplash.com"],
+  // },
+   images: {
+    remotePatterns: [new URL('https://unsplash.com/**')],
+  },
 };

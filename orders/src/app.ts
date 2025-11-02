@@ -3,7 +3,7 @@ import "express-async-errors";
 import { json } from "body-parser";
 import mongoose from "mongoose";
 import cookieSession from "cookie-session";
-
+import { metricsMiddleware, metricsHandler } from './metrics/metrics';
 import {
   errorHandler,
   NotFoundError,
@@ -24,12 +24,13 @@ app.use(
     secure: process.env.NODE_ENV !== "test",
   })
 );
+app.use(metricsMiddleware);
 app.use(currentUser);
 app.use(deleteOrderRouter);
 app.use(showOrderRouter);
 app.use(indexOrderRouter);
 app.use(newOrderRouter);
-
+app.get('/metrics', metricsHandler);
 app.all("*", async (req, res) => {
   throw new NotFoundError();
 });

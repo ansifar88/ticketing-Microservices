@@ -48,6 +48,14 @@ build:
         manual:
           - src: "src/**.*.ts"
             dest: .
+    # - image: ansifar88/search
+    #   context: search
+    #   docker:
+    #     dockerfile: Dockerfile
+    #   sync:
+    #     manual:
+    #       - src: "src/**.*.ts"
+    #         dest: .
     - image: ansifar88/client
       context: client
       docker:

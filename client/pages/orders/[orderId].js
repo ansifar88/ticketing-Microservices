@@ -23,9 +23,7 @@ function CheckoutForm({ orderId }) {
     url: "/api/payments/",
     method: "post",
     body: { orderId },
-    onSuccess: (data) => {
-      setClientSecret(data.clientSecret);
-    },
+    onSuccess: (data) => setClientSecret(data.clientSecret),
   });
 
   useEffect(() => {
@@ -37,9 +35,7 @@ function CheckoutForm({ orderId }) {
 
     setLoading(true);
     const result = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement),
-      },
+      payment_method: { card: elements.getElement(CardElement) },
     });
     setLoading(false);
 
@@ -47,30 +43,48 @@ function CheckoutForm({ orderId }) {
       console.error(result.error.message);
       alert(result.error.message);
     } else if (result.paymentIntent.status === "succeeded") {
-        console.log(result,"result")
-        Router.push('/orders')
-      // Optionally redirect or show success message
+      Router.push("/orders");
     }
   };
 
   return (
-    <div style={styles.formContainer} >
+    <div className="card shadow-sm border-0 rounded-3 mt-4">
+      <div className="card-body p-4">
+        <h4 className="fw-semibold mb-3 text-center text-primary">
+          Enter Payment Details
+        </h4>
 
-    <form onSubmit={(e) => e.preventDefault()}>
-       <div style={styles.cardField}>
+        <div className="mb-3 border rounded p-3">
           <CardElement options={CARD_ELEMENT_OPTIONS} />
         </div>
-      {errors}
-      <button
-        style={styles.button}
-        type="button"
-        onClick={handlePay}
-        disabled={!stripe || loading || !clientSecret}
-        >
-        {loading ? "Processing..." : "Pay Now"}
-      </button>
-    </form>
-          </div>
+
+        {errors && <div className="alert alert-danger mt-3 mb-0">{errors}</div>}
+
+        <div className="d-grid mt-4">
+          <button
+            type="button"
+            onClick={handlePay}
+            className="btn btn-primary btn-lg"
+            disabled={!stripe || loading || !clientSecret}
+          >
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                Processing...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-credit-card-2-front me-2"></i> Pay Now
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -88,15 +102,32 @@ export default function OrderShow({ order }) {
   }, [order]);
 
   if (timeLeft <= 0) {
-    return <div>Order Expired</div>;
+    return (
+      <div className="container py-5 text-center">
+        <div className="alert alert-danger shadow-sm d-inline-block">
+          <i className="bi bi-x-circle-fill me-2"></i> Order Expired
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>Time left to pay: {timeLeft} seconds</h1>
-      <Elements stripe={stripePromise}>
-        <CheckoutForm orderId={order.id} />
-      </Elements>
+    <div className="container py-5">
+      <div className="row justify-content-center">
+        <div className="col-md-8 col-lg-6">
+          <div className="text-center mb-4">
+            <h2 className="fw-bold text-primary">Complete Your Payment</h2>
+            <p className="text-muted">
+              Time left to pay:{" "}
+              <span className="fw-bold text-danger">{timeLeft}</span> seconds
+            </p>
+          </div>
+
+          <Elements stripe={stripePromise}>
+            <CheckoutForm orderId={order.id} />
+          </Elements>
+        </div>
+      </div>
     </div>
   );
 }
@@ -107,49 +138,16 @@ OrderShow.getInitialProps = async (context, client) => {
   return { order: data };
 };
 
-const styles = {
-  formContainer: {
-    backgroundColor: "#fff",
-    borderRadius: "8px",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-    padding: "20px",
-    marginTop: "20px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-  },
-  cardField: {
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    padding: "10px",
-  },
-  button: {
-    backgroundColor: "#635BFF",
-    color: "white",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontWeight: 600,
-  },
-  error: {
-    color: "red",
-    fontSize: "14px",
-  },
-};
 const CARD_ELEMENT_OPTIONS = {
   style: {
     base: {
       color: "#32325d",
-      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontFamily: '"Inter", "Helvetica Neue", Helvetica, sans-serif',
       fontSmoothing: "antialiased",
       fontSize: "16px",
       "::placeholder": {
         color: "#aab7c4",
       },
-      padding: "10px 12px",
     },
     invalid: {
       color: "#fa755a",

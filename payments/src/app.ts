@@ -12,6 +12,7 @@ import {
 
 import { createChargeRouter } from "./routes/new";
 import { stripeCallbackRouter } from "./callback/stripe-callback";
+import { metricsHandler, metricsMiddleware } from "./metrics/metrics";
 
 const app = express();
 app.set("trust proxy", true);
@@ -23,11 +24,12 @@ app.use(
     secure: process.env.NODE_ENV !== "test",
   })
 );
+app.use(metricsMiddleware);
 app.use(currentUser);
 
 app.use(createChargeRouter);
 app.use(stripeCallbackRouter);
-
+app.get('/metrics', metricsHandler);
 app.all("*", async (req, res) => {
   throw new NotFoundError();
 });
