@@ -10,7 +10,7 @@ router.post(
   "/api/users/signin",
   [
     body("email").isEmail().withMessage("email must be valid"),
-    body("password").trim().notEmpty().withMessage("Password must be provided."),
+    body("password").trim().notEmpty().withMessage("Password must be provided"),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
