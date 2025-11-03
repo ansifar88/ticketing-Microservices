@@ -4,7 +4,11 @@ import { json } from "body-parser";
 import mongoose from "mongoose";
 import cookieSession from "cookie-session";
 
-import { errorHandler, NotFoundError,currentUser } from "@ansif__artickets/common";
+import {
+  errorHandler,
+  NotFoundError,
+  currentUser,
+} from "@ansif__artickets/common";
 import { createTicketRouter } from "./routes/new";
 import { showTicketRouter } from "./routes/show";
 import { indexTicketRouter } from "./routes/index";
@@ -18,7 +22,7 @@ app.use(json());
 app.use(
   cookieSession({
     signed: false,
-    secure: process.env.NODE_ENV !== "test",
+    secure: false,
   })
 );
 app.use(metricsMiddleware);
@@ -27,7 +31,7 @@ app.use(createTicketRouter);
 app.use(showTicketRouter);
 app.use(indexTicketRouter);
 app.use(updateTicketRouter);
-app.get('/metrics', metricsHandler);
+app.get("/metrics", metricsHandler);
 app.all("*", async (req, res) => {
   throw new NotFoundError();
 });

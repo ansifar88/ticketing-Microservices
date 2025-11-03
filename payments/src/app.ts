@@ -21,7 +21,7 @@ app.use(json());
 app.use(
   cookieSession({
     signed: false,
-    secure: process.env.NODE_ENV !== "test",
+    secure: false,
   })
 );
 app.use(metricsMiddleware);
@@ -29,7 +29,7 @@ app.use(currentUser);
 
 app.use(createChargeRouter);
 app.use(stripeCallbackRouter);
-app.get('/metrics', metricsHandler);
+app.get("/metrics", metricsHandler);
 app.all("*", async (req, res) => {
   throw new NotFoundError();
 });
