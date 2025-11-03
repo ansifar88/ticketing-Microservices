@@ -51,7 +51,7 @@ const LandingPage = ({ currentUser, tickets }) => {
                   src="https://unsplash.com/photos/group-of-people-watching-concert-U7HLzMO4SIY"
                   alt={ticket.title}
                   width={400}
-                  height={220}
+                  height={221}
                   className="card-img-top rounded-top"
                   style={{ objectFit: "cover" }}
                 />
