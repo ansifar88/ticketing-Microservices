@@ -4,14 +4,19 @@ metadata:
   name: ingress-service
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - ticketing-micro.shop
+        - www.ticketing-micro.shop
+      secretName: ticketing-micro-tls
   rules:
-    - host: www.ticketing-micro.shop
+    - host: ticketing-micro.shop
       http:
         paths:
-          - path: /api/payments/.*
+          - path: /api/payments/.*   
             pathType: ImplementationSpecific
             backend:
               service:
@@ -39,6 +44,16 @@ spec:
                 name: orders-srv
                 port:
                   number: 3000
+          - path: /.*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 3000
+    - host: www.ticketing-micro.shop
+      http:
+        paths:
           - path: /.*
             pathType: ImplementationSpecific
             backend:
