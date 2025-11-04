@@ -17,6 +17,8 @@ import { metricsHandler, metricsMiddleware } from "./metrics/metrics";
 const app = express();
 app.set("trust proxy", true);
 
+app.use(stripeCallbackRouter);
+
 app.use(json());
 app.use(
   cookieSession({
@@ -28,7 +30,7 @@ app.use(metricsMiddleware);
 app.use(currentUser);
 
 app.use(createChargeRouter);
-app.use(stripeCallbackRouter);
+
 app.get("/metrics", metricsHandler);
 app.all("*", async (req, res) => {
   throw new NotFoundError();
