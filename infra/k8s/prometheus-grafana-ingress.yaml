@@ -6,6 +6,11 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - grafana.ticketing-micro.shop
+        - prometheus.ticketing-micro.shop
+      secretName: ticketing-micro-tls
   rules:
     - host: grafana.ticketing-micro.shop
       http:
