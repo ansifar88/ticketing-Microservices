@@ -12,6 +12,8 @@ spec:
     - hosts:
         - ticketing-micro.shop
         - www.ticketing-micro.shop
+        - prometheus.ticketing-micro.shop
+        - grafana.ticketing-micro.shop
       secretName: ticketing-micro-tls
   rules:
     - host: ticketing-micro.shop
